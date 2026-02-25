@@ -433,8 +433,11 @@ const data = {
   commission: document.getElementById("commissionAmount").innerText
 };
 
-fetch(https://script.google.com/macros/s/AKfycbzCvUaHOL8tXchWvOdNg41garZPrR7oMjua6AdsUl6Dt-7x1epFsvoA9LSRwk1GXuLC/exec", {
+fetch("https://script.google.com/macros/s/AKfycbzCvUaHOL8tXchWvOdNg41garZPrR7oMjua6AdsUl6Dt-7x1epFsvoA9LSRwk1GXuLC/exec", {
   method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
   body: JSON.stringify(data)
 })
 .then(res => res.text())
@@ -443,13 +446,16 @@ fetch(https://script.google.com/macros/s/AKfycbzCvUaHOL8tXchWvOdNg41garZPrR7oMju
 })
 .catch(err => {
   alert("Error Saving Quote");
+  console.error(err);
 });
+
 }
 
 </script>
 </body>
 
 </html>
+
 
 
 
