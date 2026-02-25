@@ -420,11 +420,37 @@ document.getElementById("adminBox").style.display="block";
 
 addWindow();
 addDoor();
+function sendQuote(){
+
+const data = {
+  name: document.getElementById("custName").value,
+  phone: document.getElementById("custPhone").value,
+  email: document.getElementById("custEmail").value,
+  address: document.getElementById("custAddress").value,
+  subtotal: document.getElementById("subtotal").innerText,
+  discount: document.getElementById("discountAmount").innerText,
+  grandTotal: document.getElementById("grandTotal").innerText,
+  commission: document.getElementById("commissionAmount").innerText
+};
+
+fetch(https://script.google.com/macros/s/AKfycbzCvUaHOL8tXchWvOdNg41garZPrR7oMjua6AdsUl6Dt-7x1epFsvoA9LSRwk1GXuLC/exec", {
+  method: "POST",
+  body: JSON.stringify(data)
+})
+.then(res => res.text())
+.then(res => {
+  alert("Quote Saved Successfully!");
+})
+.catch(err => {
+  alert("Error Saving Quote");
+});
+}
 
 </script>
 </body>
 
 </html>
+
 
 
 
