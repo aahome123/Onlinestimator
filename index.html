@@ -371,17 +371,6 @@ if(div.querySelector(".insulair").checked) price+=250;
 div.querySelector(".price").innerText=price.toFixed(2);
 updateTotals();
 }
-
-let price=(w*h)/(base.w*base.h)*base.p;
-
-if(div.querySelector(".lowe").checked) price*=1.05;
-if(div.querySelector(".insul").checked) price*=1.15;
-if(div.querySelector(".insulair").checked) price+=250;
-
-div.querySelector(".price").innerText=price.toFixed(2);
-updateTotals();
-}
-
 function updateTotals(){
 
 let subtotal=0;
@@ -432,6 +421,7 @@ addDoor();
 </body>
 
 </html>
+
 
 
 
