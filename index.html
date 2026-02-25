@@ -304,7 +304,7 @@ div.innerHTML=`
 <div class="checkbox-group">
 <label><input type="checkbox" class="lowe"> Low-E (+5%)</label>
 <label><input type="checkbox" class="insul"> Insulated (+15%)</label>
-if(div.querySelector(".insulair").checked) price+=250;
+<label><input type="checkbox" class="insulair"> White Interlayer (+$250)</label>
 </div>
 <div class="total-box">Price: $<span class="price">0.00</span></div>
 <button onclick="deleteItem(this,'door')">Delete</button>
@@ -339,15 +339,6 @@ updateTotals();
 return;
 }
 
-let price=(w*h)/(base.w*base.h)*base.p;
-
-if(div.querySelector(".lowe").checked) price*=1.05;
-if(div.querySelector(".insul").checked) price*=1.15;
-if(div.querySelector(".insulair").checked) price+=250;
-
-div.querySelector(".price").innerText=price.toFixed(2);
-updateTotals();
-}
 let price=(w*h)/(base.w*base.h)*base.p;
 
 if(div.querySelector(".lowe").checked) price*=1.05;
@@ -408,5 +399,6 @@ addDoor();
 </body>
 
 </html>
+
 
 
