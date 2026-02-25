@@ -271,6 +271,7 @@ div.innerHTML=`
 </select>
 <input type="number" class="w" placeholder="Width">
 <input type="number" class="h" placeholder="Height">
+<input type="number" class="qty" placeholder="Qty" value="1" min="1">
 </div>
 <div class="checkbox-group">
 <label><input type="checkbox" class="lowe"> Low-E </label>
@@ -303,6 +304,7 @@ div.innerHTML=`
 </select>
 <input type="number" class="w" placeholder="Width">
 <input type="number" class="h" placeholder="Height">
+<input type="number" class="qty" placeholder="Qty" value="1" min="1">
 </div>
 <div class="checkbox-group">
 <label><input type="checkbox" class="lowe"> Low-E </label>
@@ -345,11 +347,14 @@ return;
 
 let price=(w*h)/(base.w*base.h)*base.p;
 
+let qty = parseInt(div.querySelector(".qty").value) || 1;
+
 if(div.querySelector(".lowe").checked) price*=1.05;
 if(div.querySelector(".insul").checked) price*=1.15;
 if(div.querySelector(".insulair").checked) price+=250;
 if(div.querySelector(".grid").checked) price+=175;
 
+price = price * qty;
 div.querySelector(".price").innerText=price.toFixed(2);
 updateTotals();
 }
@@ -371,6 +376,8 @@ if(div.querySelector(".lowe").checked) price*=1.05;
 if(div.querySelector(".insul").checked) price*=1.15;
 if(div.querySelector(".insulair").checked) price+=250;
 if(div.querySelector(".grid").checked) price+=175;
+let qty = parseInt(div.querySelector(".qty").value) || 1;
+price = price * qty;
 
 div.querySelector(".price").innerText=price.toFixed(2);
 updateTotals();
@@ -451,6 +458,7 @@ fetch("https://script.google.com/macros/s/AKfycbzCvUaHOL8tXchWvOdNg41garZPrR7oMj
 </body>
 
 </html>
+
 
 
 
