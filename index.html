@@ -340,7 +340,18 @@ div.querySelector(".price").innerText="0.00";
 updateTotals();
 return;
 }
-  function calcDoorItem(div){
+
+let price=(w*h)/(base.w*base.h)*base.p;
+
+if(div.querySelector(".lowe").checked) price*=1.05;
+if(div.querySelector(".insul").checked) price*=1.15;
+if(div.querySelector(".insulair").checked) price+=250;
+
+div.querySelector(".price").innerText=price.toFixed(2);
+updateTotals();
+}
+
+function calcDoorItem(div){
 let base=doorBase[div.querySelector(".type").value];
 let w=div.querySelector(".w").value;
 let h=div.querySelector(".h").value;
@@ -421,6 +432,7 @@ addDoor();
 </body>
 
 </html>
+
 
 
 
