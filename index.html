@@ -220,6 +220,7 @@ const ADMIN_PASSWORD="AA2026";
 const DISCOUNT_CODES={
 "SAVE5":5,
 "SAVE10":10,
+"First Responder":25,
 "VIP15":15,
 "SHOWCASEHOME":25
 };
@@ -375,9 +376,9 @@ document.getElementById("profitAmount").innerText=profit.toFixed(2);
 let commissionRate=0;
 
 if(discountPercent<=10){commissionRate=10;}
-else if(discountPercent<=15){commissionRate=7;}
-else if(discountPercent<=20){commissionRate=5;}
-else if(discountPercent<=25){commissionRate=2;}
+else if(discountPercent<=20){commissionRate=7;}
+else if(discountPercent<=25){commissionRate=5;}
+else if(discountPercent<=26){commissionRate=2;}
 else{commissionRate=0;}
 
 let commission=grand*(commissionRate/100);
@@ -399,4 +400,5 @@ addDoor();
 
 </script>
 </body>
+
 </html>
