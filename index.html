@@ -276,6 +276,7 @@ div.innerHTML=`
 <label><input type="checkbox" class="lowe"> Low-E </label>
 <label><input type="checkbox" class="insul"> Insulated </label>
 <label><input type="checkbox" class="insulair"> White Interlayer </label>
+<label><input type="checkbox" class="grid"> Grid </label>
 </div>
 <div class="total-box">Price: $<span class="price">0.00</span></div>
 <button onclick="deleteItem(this,'window')">Delete</button>
@@ -307,6 +308,7 @@ div.innerHTML=`
 <label><input type="checkbox" class="lowe"> Low-E </label>
 <label><input type="checkbox" class="insul"> Insulated </label>
 <label><input type="checkbox" class="insulair"> White Interlayer </label>
+<label><input type="checkbox" class="grid"> Grid </label>
 </div>
 <div class="total-box">Price: $<span class="price">0.00</span></div>
 <button onclick="deleteItem(this,'door')">Delete</button>
@@ -346,6 +348,7 @@ let price=(w*h)/(base.w*base.h)*base.p;
 if(div.querySelector(".lowe").checked) price*=1.05;
 if(div.querySelector(".insul").checked) price*=1.15;
 if(div.querySelector(".insulair").checked) price+=250;
+if(div.querySelector(".grid").checked) price+=175;
 
 div.querySelector(".price").innerText=price.toFixed(2);
 updateTotals();
@@ -367,6 +370,7 @@ let price=(w*h)/(base.w*base.h)*base.p;
 if(div.querySelector(".lowe").checked) price*=1.05;
 if(div.querySelector(".insul").checked) price*=1.15;
 if(div.querySelector(".insulair").checked) price+=250;
+if(div.querySelector(".grid").checked) price+=175;
 
 div.querySelector(".price").innerText=price.toFixed(2);
 updateTotals();
@@ -421,6 +425,7 @@ addDoor();
 </body>
 
 </html>
+
 
 
 
