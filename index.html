@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AA Home Solutions | Window & Door Estimates</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{ --blue:#1e5eff; }
+
+body{
+font-family:"Segoe UI",system-ui,sans-serif;
+background:#f4f7fb;
+margin:0;
+color:#222;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:28px 16px 60px;
+}
+
+header{
+text-align:center;
+margin-bottom:30px;
+}
+
+h1{
+font-size:clamp(26px,4vw,34px);
+margin-bottom:10px;
+}
+
+.subtitle{
+font-size:18px;
+color:#555;
+}
+
+.tabs{
+display:flex;
+gap:10px;
+margin-bottom:30px;
+flex-wrap:wrap;
+}
+
+.tab-btn{
+background:#e4ecff;
+color:#1e5eff;
+padding:10px 18px;
+border-radius:8px;
+cursor:pointer;
+font-weight:600;
+}
+
+.tab-btn.active{
+background:var(--blue);
+color:#fff;
+}
+
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+.section{
+background:#fff;
+border-radius:14px;
+padding:28px;
+margin-bottom:48px;
+box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+.section h2{
+margin-top:0;
+font-size:24px;
+}
+
+.row{
+display:flex;
+flex-wrap:wrap;
+gap:14px;
+margin-bottom:14px;
+}
+
+.row input,
+.row select{
+flex:1;
+padding:12px;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:15px;
+}
+
+.checkbox-group{
+display:flex;
+gap:18px;
+flex-wrap:wrap;
+margin-top:10px;
+}
+
+button{
+background:var(--blue);
+color:#fff;
+border:none;
+padding:14px 26px;
+font-size:16px;
+border-radius:10px;
+cursor:pointer;
+}
+
+button:hover{background:#184bcc;}
+
+.total-box{
+font-size:20px;
+margin-top:20px;
+font-weight:600;
+color:var(--blue);
+}
+
+.contact{
+text-align:center;
+font-size:18px;
+margin-top:50px;
+}
+
+.admin-box{
+background:#f0f5ff;
+padding:20px;
+border-radius:10px;
+margin-top:20px;
+display:none;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+<div style="text-align:center; margin-bottom:10px;">
+<img src="logo.png" alt="AA Home Solutions Logo" style="max-width:220px;">
+</div>
+<h1>AA Home Solutions</h1>
+<div class="subtitle">Instant, Professional Window & Door Estimates</div>
+</header>
+
+<div class="tabs">
+<div class="tab-btn active" onclick="showTab('lead')">Customer Info</div>
+<div class="tab-btn" onclick="showTab('windows')">Windows</div>
+<div class="tab-btn" onclick="showTab('doors')">Doors</div>
+<div class="tab-btn" onclick="showTab('totals')">Project Total</div>
+</div>
+
+<div id="lead" class="tab-content active">
+<div class="section">
+<h2>Start Your Quote</h2>
+<div class="row">
+<input id="custName" placeholder="Full Name">
+<input id="custPhone" placeholder="Phone Number">
+</div>
+<div class="row">
+<input id="custEmail" placeholder="Email">
+<input id="custAddress" placeholder="Property Address">
+</div>
+</div>
+</div>
+
+<div id="windows" class="tab-content">
+<div id="windowContainer"></div>
+<button onclick="addWindow()">Add Window</button>
+</div>
+
+<div id="doors" class="tab-content">
+<div id="doorContainer"></div>
+<button onclick="addDoor()">Add Door</button>
+</div>
+
+<div id="totals" class="tab-content">
+<div class="section">
+<h2>Project Summary</h2>
+
+<div class="total-box">
+Subtotal: $<span id="subtotal">0.00</span><br><br>
+Discount: $<span id="discountAmount">0.00</span><br><br>
+Grand Total: $<span id="grandTotal">0.00</span>
+</div>
+
+<br>
+<input id="discountCode" placeholder="Enter Discount Code" oninput="updateTotals()">
+
+<br><br>
+<button onclick="adminLogin()">Admin Margin & Commission Review</button>
+
+<div class="admin-box" id="adminBox">
+<label>Margin %</label>
+<input type="number" id="marginPercent" value="40" oninput="updateTotals()">
+<br><br>
+Estimated Profit: $<span id="profitAmount">0.00</span>
+
+<br><br>
+<strong>Commission Tracker</strong><br>
+Commission Rate: <span id="commissionRate">0</span>%<br><br>
+Rep Commission: $<span id="commissionAmount">0.00</span>
+</div>
+
+<br><br>
+<button onclick="sendQuote()">Finalize & Send Quote</button>
+
+</div>
+</div>
+
+<div class="contact">
+Contact Alex — 561-568-8858
+</div>
+
+</div>
+
+<script>
+
+const ADMIN_PASSWORD="AA2026";
+
+const DISCOUNT_CODES={
+"SAVE5":5,
+"SAVE10":10,
+"VIP15":15,
+"SHOWCASEHOME":25
+};
+
+const windowBase={
+"Sliding":{w:71,h:48,p:2750},
+"Single Hung":{w:36,h:48,p:2300},
+"Casement":{w:36,h:48,p:2500},
+"Picture":{w:50,h:40,p:2800},
+"Three-Light Slider (XOX)":{w:110,h:60,p:4000}
+};
+
+const doorBase={
+"French Door":{w:71,h:81,p:4500},
+"Single Entry Door":{w:36,h:81,p:3000},
+"Sliding Glass Door":{w:71,h:81,p:5000}
+};
+
+let windowTotals=[];
+let doorTotals=[];
+
+function showTab(id){
+document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+
+function addWindow(){
+let div=document.createElement("div");
+div.className="section";
+div.innerHTML=`
+<h2>Window</h2>
+<div class="row">
+<select class="type">
+<option>Sliding</option>
+<option>Single Hung</option>
+<option>Casement</option>
+<option>Picture</option>
+<option>Three-Light Slider (XOX)</option>
+</select>
+<input type="number" class="w" placeholder="Width">
+<input type="number" class="h" placeholder="Height">
+</div>
+<div class="checkbox-group">
+<label><input type="checkbox" class="lowe"> Low-E (+5%)</label>
+<label><input type="checkbox" class="insul"> Insulated (+15%)</label>
+<label><input type="checkbox" class="insulair"> White Interlayer (+10%)</label>
+</div>
+<div class="total-box">Price: $<span class="price">0.00</span></div>
+<button onclick="deleteItem(this,'window')">Delete</button>
+`;
+
+div.querySelectorAll("input,select").forEach(el=>{
+el.oninput=()=>calcWindowItem(div);
+});
+
+windowContainer.appendChild(div);
+windowTotals.push(0);
+}
+
+function addDoor(){
+let div=document.createElement("div");
+div.className="section";
+div.innerHTML=`
+<h2>Door</h2>
+<div class="row">
+<select class="type">
+<option>French Door</option>
+<option>Single Entry Door</option>
+<option>Sliding Glass Door</option>
+</select>
+<input type="number" class="w" placeholder="Width">
+<input type="number" class="h" placeholder="Height">
+</div>
+<div class="checkbox-group">
+<label><input type="checkbox" class="lowe"> Low-E (+5%)</label>
+<label><input type="checkbox" class="insul"> Insulated (+15%)</label>
+<label><input type="checkbox" class="insulair"> White Interlayer</label>
+</div>
+<div class="total-box">Price: $<span class="price">0.00</span></div>
+<button onclick="deleteItem(this,'door')">Delete</button>
+`;
+
+div.querySelectorAll("input,select").forEach(el=>{
+el.oninput=()=>calcDoorItem(div);
+});
+
+doorContainer.appendChild(div);
+doorTotals.push(0);
+}
+
+function deleteItem(btn,type){
+let section=btn.parentElement;
+let container=section.parentElement;
+let index=[...container.children].indexOf(section);
+section.remove();
+if(type==="window"){windowTotals[index]=0;}
+if(type==="door"){doorTotals[index]=0;}
+updateTotals();
+}
+
+function calcWindowItem(div){
+let base=windowBase[div.querySelector(".type").value];
+let w=div.querySelector(".w").value;
+let h=div.querySelector(".h").value;
+if(!w||!h){updateTotals();return;}
+let price=(w*h)/(base.w*base.h)*base.p;
+if(div.querySelector(".lowe").checked) price*=1.05;
+if(div.querySelector(".insul").checked) price*=1.15;
+if(div.querySelector(".insulair").checked) price*=1.10;
+div.querySelector(".price").innerText=price.toFixed(2);
+updateTotals();
+}
+
+function calcDoorItem(div){
+let base=doorBase[div.querySelector(".type").value];
+let type=div.querySelector(".type").value;
+let w=div.querySelector(".w").value;
+let h=div.querySelector(".h").value;
+if(!w||!h){updateTotals();return;}
+let price=(w*h)/(base.w*base.h)*base.p;
+if(div.querySelector(".lowe").checked) price*=1.05;
+if(div.querySelector(".insul").checked) price*=1.15;
+if(div.querySelector(".insulair").checked){
+if(type==="Single Entry Door") price+=500;
+if(type==="French Door") price+=900;
+}
+div.querySelector(".price").innerText=price.toFixed(2);
+updateTotals();
+}
+
+function updateTotals(){
+
+let subtotal=0;
+document.querySelectorAll(".price").forEach(p=>{
+subtotal+=parseFloat(p.innerText)||0;
+});
+
+let code=document.getElementById("discountCode").value.toUpperCase();
+let discountPercent=DISCOUNT_CODES[code]||0;
+let discount=subtotal*(discountPercent/100);
+let grand=subtotal-discount;
+
+document.getElementById("subtotal").innerText=subtotal.toFixed(2);
+document.getElementById("discountAmount").innerText=discount.toFixed(2);
+document.getElementById("grandTotal").innerText=grand.toFixed(2);
+
+let margin=document.getElementById("marginPercent").value||0;
+let profit=grand*(margin/100);
+document.getElementById("profitAmount").innerText=profit.toFixed(2);
+
+// Commission logic based on discount %
+let commissionRate=0;
+
+if(discountPercent<=10){commissionRate=10;}
+else if(discountPercent<=15){commissionRate=7;}
+else if(discountPercent<=20){commissionRate=5;}
+else if(discountPercent<=25){commissionRate=2;}
+else{commissionRate=0;}
+
+let commission=grand*(commissionRate/100);
+
+document.getElementById("commissionRate").innerText=commissionRate;
+document.getElementById("commissionAmount").innerText=commission.toFixed(2);
+
+}
+
+function adminLogin(){
+let pass=prompt("Enter Admin Password");
+if(pass===ADMIN_PASSWORD){
+document.getElementById("adminBox").style.display="block";
+}else alert("Incorrect Password");
+}
+
+addWindow();
+addDoor();
+
+</script>
+</body>
+</html>
